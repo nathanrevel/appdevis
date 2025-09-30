@@ -1,0 +1,48 @@
+
+/* Page sizing */
+@page { size: A4; margin: 10mm; }
+.a4 { width: 210mm; min-height: 277mm; }
+
+/* General */
+body { font-family: Arial, Helvetica, sans-serif; }
+.quote-a4 { background: white; padding: 0; }
+.q-logo { height: 34px; margin-top: 2mm; }
+.q-title { font-size: 18px; margin: 2mm 0 2mm; }
+.q-num { font-size: 18px; font-weight: 600; }
+
+.table { margin-bottom: 0.5rem; }
+.table th, .table td { padding: 4px 6px; vertical-align: middle; }
+.table-bordered { border-color: #333; }
+.table-bordered th, .table-bordered td { border-color: #333; }
+
+/* Header small table */
+.q-meta th { width: 55%; font-weight: normal; background: #e9ecef; }
+.q-meta td { width: 45%; }
+
+/* Address box */
+.q-addr thead th { background: #e9ecef; }
+
+/* Lines table header color similar to sample */
+.table-primary>tr>th, .table-primary th { background:#d4e5f6 !important; }
+
+.q-legal-note { font-size: 11px; color:#444; padding-top: 6px; padding-bottom: 6px; }
+
+/* Footer blocks */
+.q-footer-table { border-color:#333; }
+.q-footer-table td {
+  vertical-align: top;   /* aligne tout le contenu en haut */
+  padding: 6px 10px;     /* garde de l'air autour du texte */
+}
+
+.footer-title { font-weight:700; text-transform: uppercase; font-size: 12px; }
+.link { text-decoration: underline; }
+
+.sig-box { border:1px solid #333; height: 22mm; }
+
+
+/* Print tweaks */
+@media print {
+  nav, .d-print-none, .alert { display: none !important; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .container { max-width: 100% !important; padding: 0 !important; }
+}

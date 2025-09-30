@@ -1,0 +1,149 @@
+
+{% extends 'base.html' %}
+{% block title %}Devis {{ quote.reference or ('#' ~ quote.id) }}{% endblock %}
+{% block content %}
+<div class="quote-a4 a4">
+  <!-- HEADER -->
+  <section class="q-header-table d-print-block">
+    <div class="row gx-3">
+      <div class="col-8">
+        <div class="d-flex align-items-start">
+          <img src="{{ url_for('static', filename='logo_alltricks_pro.png') }}" class="q-logo" alt="Alltricks Pro">
+          <div class="ms-3">
+            <div class="q-title"><span class="fw-bold">DEVIS N°</span> <span class="q-num">{{ quote.reference or ('#' ~ quote.id) }}</span></div>
+            <table class="q-meta table table-bordered mb-0">
+              <tr>
+                <th>Date du devis</th>
+                <td class="text-end">{{ quote.created_at.strftime('%d/%m/%Y') }}</td>
+              </tr>
+              <tr>
+                <th>Devis valable jusqu'au</th>
+                <td class="text-end">{{ (quote.valid_until.strftime('%d/%m/%Y')) if quote.valid_until else '—' }}</td>
+              </tr>
+              <tr>
+                <th>Émis par</th>
+                <td class="text-end">{{ quote.issued_by or '—' }}</td>
+              </tr>
+              <tr>
+                <th>À l'attention de</th>
+                <td class="text-end">{{ quote.attention_to or (quote.client.contact_name or '—') }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 d-flex align-items-end">
+        <table class="q-addr table table-bordered mb-0 w-100">
+          <thead><tr><th class="text-center">Adresse de facturation client</th></tr></thead>
+          <tbody>
+            <tr><td class="text-center">
+              <div class="fw-bold text-uppercase">{{ quote.client.company or quote.client.contact_name }}</div>
+              {% if quote.client.address %}<div>{{ quote.client.address }}</div>{% endif %}
+              <div>{{ quote.client.zip_code }} {{ quote.client.city }} {{ quote.client.country }}</div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINES TABLE -->
+  <section class="q-lines mt-2">
+    <table class="table table-bordered align-middle q-lines-table">
+      <thead class="table-primary">
+        <tr>
+          <th>Désignation :</th>
+          <th style="width:140px">Référence</th>
+          <th style="width:90px" class="text-end">Quantité</th>
+          <th style="width:160px" class="text-end">Prix unitaire HT</th>
+          <th style="width:160px" class="text-end">TOTAL HT</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for it in quote.items %}
+        <tr>
+          <td>{{ it.description }}</td>
+          <td>{{ it.ref or '—' }}</td>
+          <td class="text-end">{{ '%.2f'|format(it.quantity) }}</td>
+          <td class="text-end">{{ '%.2f'|format(it.unit_price) }} €</td>
+          <td class="text-end">{{ '%.2f'|format(it.line_total_ht) }} €</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" class="q-legal-note">
+            {{ LEGAL_FOOTER }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" class="text-end">TOTAL HT</td>
+          <td class="text-end">{{ '%.2f'|format(quote.subtotal_ht) }} €</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="text-end">TVA</td>
+          <td class="text-end">{{ '%.2f'|format(quote.total_tva) }} €</td>
+        </tr>
+        <tr class="table-secondary">
+          <td colspan="4" class="text-end fw-bold">TOTAL TTC</td>
+          <td class="text-end fw-bold">{{ '%.2f'|format(quote.total_ttc) }} €</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- FOOTER BLOCKS -->
+  <section class="q-footer mt-2">
+    <table class="table table-bordered q-footer-table">
+      <tbody>
+        <tr>
+          <td style="width:40%">
+            <div class="footer-title">SERVICES ADMINISTRATIFS</div>
+            <div>AVANIS SAS - Alltricks</div>
+            <div>5 Avenue Isaac Newton</div>
+            <div>78180 Montigny-le-Bretonneux</div>
+            <div>France</div>
+            <div class="mt-2">TVA Intracommunautaire FR 23 484 395 629</div>
+            <div>SAS au capital social de 166 054€</div>
+            <div>RCS CHARTRES 484 395 629</div>
+
+            <div class="footer-title mt-2">SIEGE SOCIAL</div>
+            <div>7 rue de la Fosse aux Canes</div>
+            <div>28200 Châteaudun</div>
+            <div>France</div>
+          </td>
+          <td style="width:30%">
+            <div class="footer-title">CONTACTS</div>
+            <div><a href="mailto:factures@alltricks.com" class="link">Service comptabilité</a></div>
+            <div>Tél. : +33 (0)1 30 48 90 07</div>
+            <div>Email : factures@alltricks.com</div>
+            <div class="mt-2"><span class="link">Contact service Alltricks Pro</span></div>
+            <div>Nathan REVEL</div>
+            <div>Mobile : 07 85 38 85 96</div>
+            <div>Email : nathan.revel@alltricks.com</div>
+          </td>
+          <td style="width:30%">
+            <div class="footer-title">COORDONNÉES BANCAIRES</div>
+            <div>Titulaire du compte : AVANIS</div>
+            <div>RIB : 30004 02552 00011101451 07</div>
+            <div>IBAN : FR76 3000 4025 5200 0111 0145 107</div>
+            <div>BIC : BNPAFRPPIFO</div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" class="p-2">
+            <div class="footer-title">Signature du client</div>
+            <div class="small text-muted">(précédée de la mention « Bon pour accord »)</div>
+            <div class="sig-box mt-2"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="d-print-none mt-3">
+    <a class="btn btn-outline-secondary" href="{{ url_for('quotes_list') }}">Retour</a>
+    <a class="btn btn-outline-primary" href="javascript:window.print()">Imprimer / PDF</a>
+  </div>
+</div>
+{% endblock %}

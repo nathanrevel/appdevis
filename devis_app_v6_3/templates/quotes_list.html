@@ -1,0 +1,54 @@
+
+{% extends 'base.html' %}
+{% block title %}Devis{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Devis</h1>
+  <a class="btn btn-primary" href="{{ url_for('quotes_form') }}">Nouveau devis</a>
+</div>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <select class="form-select" name="status">
+      <option value="">Tous statuts</option>
+      {% for s in ['Brouillon','Envoyé','Accepté','Refusé'] %}
+        <option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <select class="form-select" name="client_id">
+      <option value="">Tous clients</option>
+      {% for c in clients %}
+        <option value="{{ c.id }}" {% if client_id==c.id %}selected{% endif %}>{{ c.company or c.contact_name }}{% if c.company_abbr %} — {{ c.company_abbr }}{% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto"><button class="btn btn-outline-secondary">Filtrer</button></div>
+</form>
+<table class="table table-striped">
+  <thead><tr><th>Réf.</th><th>Titre</th><th>Client</th><th>Date</th><th>Statut</th><th>Total TTC</th><th></th></tr></thead>
+  <tbody>
+  {% for q in quotes %}
+    <tr>
+      <td>{{ q.reference or ('#' ~ q.id) }}</td>
+      <td>{{ q.title }}</td>
+      <td>{{ q.client.company or q.client.contact_name }}</td>
+      <td>{{ q.created_at.strftime('%d/%m/%Y') }}</td>
+      <td><span class="badge bg-secondary">{{ q.status }}</span></td>
+      <td>{{ '%.2f'|format(q.total_ttc) }} €</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('quote_view', quote_id=q.id) }}">Voir</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('quotes_form', quote_id=q.id) }}">Éditer</a>
+        <form action="{{ url_for('quote_status', quote_id=q.id) }}" method="post" class="d-inline">
+          <select name="status" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
+            {% for s in ['Brouillon','Envoyé','Accepté','Refusé'] %}
+              <option value="{{ s }}" {% if q.status==s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,18 @@
+
+{% extends 'base.html' %}
+{% block title %}Client{% endblock %}
+{% block content %}
+<h1>{{ 'Éditer' if client.id else 'Nouveau client' }}</h1>
+<form method="post" class="row g-3">
+  <div class="col-md-6"><label class="form-label">Entreprise</label><input name="company" class="form-control" value="{{ client.company or '' }}"></div>
+  <div class="col-md-2"><label class="form-label">Abréviation (pour n° de devis)</label><input name="company_abbr" class="form-control" value="{{ client.company_abbr or '' }}" placeholder="ex: BIL, ATR"></div>
+  <div class="col-md-4"><label class="form-label">Contact</label><input name="contact_name" class="form-control" value="{{ client.contact_name or '' }}" required></div>
+  <div class="col-md-6"><label class="form-label">Email</label><input name="email" type="email" class="form-control" value="{{ client.email or '' }}"></div>
+  <div class="col-md-6"><label class="form-label">Téléphone</label><input name="phone" class="form-control" value="{{ client.phone or '' }}"></div>
+  <div class="col-md-8"><label class="form-label">Adresse</label><input name="address" class="form-control" value="{{ client.address or '' }}"></div>
+  <div class="col-md-4"><label class="form-label">Ville</label><input name="city" class="form-control" value="{{ client.city or '' }}"></div>
+  <div class="col-md-4"><label class="form-label">Code postal</label><input name="zip_code" class="form-control" value="{{ client.zip_code or '' }}"></div>
+  <div class="col-md-4"><label class="form-label">Pays</label><input name="country" class="form-control" value="{{ client.country or 'France' }}"></div>
+  <div class="col-12"><button class="btn btn-primary">Enregistrer</button></div>
+</form>
+{% endblock %}
